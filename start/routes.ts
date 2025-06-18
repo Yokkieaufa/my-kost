@@ -16,3 +16,5 @@ router.on('/login').renderInertia('auth/login')
 
 // Register Page
 router.on('/register').renderInertia('auth/register')
+
+router.on('/tentang-kami').renderInertia('tentangkami')

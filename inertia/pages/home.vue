@@ -1,3 +1,104 @@
+<script setup>
+import { ref, onMounted, onUnmounted, defineProps, computed, watch } from 'vue';
+import { Head, Link } from '@inertiajs/vue3';
+
+// Optional: Uncomment this if you are using AOS (Animate On Scroll)
+// import AOS from 'aos';
+// import 'aos/dist/aos.css';
+
+const props = defineProps({
+  featuredKosts: {
+    type: Array,
+    default: () => [
+      // Data dummy untuk kost di Cilacap dengan URL gambar langsung
+      // **PERHATIAN: Mengubah 'Campuran' menjadi 'Campur' agar filter 'type' berfungsi dengan dropdown.**
+      { id: 1, name: 'KOST PUTRA CILACAP KOTA', address: 'Jalan Kalimas No.17, Cilacap Tengah', type: 'Campur', isVerified: true, isRecommended: true, price: 500000, remainingRooms: 2, mainImage: 'https://www.sewakost.com/files/01-2023/ad109903/kos-putra-cilacap-kota-1339313874_large.jpg', slug: 'Kost Putra Cilacap Kota' },
+      { id: 2, name: 'KOST Pandawa', address: 'Jl. Sawo, Kandang Macan, Tegalreja, Kec. Cilacap Sel., Kabupaten Cilacap, Jawa Tengah, Cilacap, 53214 Cilacap, Indonesia', type: 'Campur', isVerified: true, isRecommended: false, price: 550000, remainingRooms: 4, mainImage: 'https://infocilacap.net/wp-content/uploads/2020/07/kost-pandawa.jpg', slug: 'kost pandawa' },
+      { id: 3, name: 'KOST Zhafran Sindoro', address: 'Jl. Sindoro (belakang kabupaten) Cilacap', type: 'Campur', isVerified: true, isRecommended: true, price: 1300000, remainingRooms: 3, mainImage: 'https://infocilacap.net/hotel/wp-content/uploads/2019/12/zhafran-kost.jpg', slug: 'Kost Zhafran' },
+      { id: 4, name: 'Kost putra 25 Cilacap Utara Cilacap', address: 'Jl. Abiyasa No.25 Cilacap', type: 'Putra', isVerified: false, isRecommended: true, price: 500000, remainingRooms: 5, mainImage: 'https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=-G0xtxB_av7cVKF_p9ixzQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=358.83594&pitch=0&thumbfov=100', slug: 'kost puta 25' },
+      { id: 5, name: 'Emerald Kost', address: 'Perum Bumi Rawakeong Cilacap', type: 'Campur', isVerified: true, isRecommended: false, price: 1300000, remainingRooms: 1, mainImage: 'https://www.sewakost.com/files/07-2024/ad174105/emerald-kost-eksklusif-2057557019_large.jpg', slug: 'emerald kost' },
+      { id: 6, name: 'Rufindo Kost', address: 'JL Savita, Sidanegara, Cilacap Tengah ( depan pintu masuk Holcim. Tepatnya depan mushola)', type: 'Campur', isVerified: true, isRecommended: true, price: 850000, remainingRooms: 2, mainImage: 'https://www.sewakost.com/files/01-2021/ad48440/rufindo-kos-paviliun-rumah-petak-959202489_large.jpg', slug: 'Rufindo Kos' },
+    ],
+  },
+});
+
+const searchQuery = ref('');
+const selectedLocation = ref('Cilacap'); // Default ke Cilacap
+const selectedKostType = ref('');
+
+const availableLocations = ref([
+  'Cilacap Tengah',
+  'Cilacap Utara',
+  'Cilacap Selatan',
+  // Tambahkan lokasi lain di Cilacap jika ada data kost untuk itu
+]);
+
+const filteredKosts = computed(() => {
+  let filtered = props.featuredKosts;
+
+  if (searchQuery.value.trim()) {
+    const searchLower = searchQuery.value.trim().toLowerCase();
+    filtered = filtered.filter(kost =>
+      kost.name.toLowerCase().includes(searchLower) ||
+      kost.address.toLowerCase().includes(searchLower)
+    );
+  }
+
+  if (selectedLocation.value) {
+    const locationLower = selectedLocation.value.toLowerCase();
+    // Mengubah cara memfilter lokasi agar lebih fleksibel
+    // Memeriksa apakah alamat kost mengandung string lokasi yang dipilih
+    filtered = filtered.filter(kost =>
+      kost.address.toLowerCase().includes(locationLower)
+    );
+  }
+
+  if (selectedKostType.value) {
+    const typeLower = selectedKostType.value.toLowerCase();
+    filtered = filtered.filter(kost =>
+      kost.type.toLowerCase() === typeLower
+    );
+  }
+  return filtered;
+});
+
+const performSearch = () => {
+  // Computed property sudah reaktif, tidak perlu aksi tambahan di sini
+};
+
+const showScrollToTop = ref(false);
+
+const openWhatsApp = () => {
+  // Perbarui nomor telepon jika diperlukan
+  window.open('https://wa.me/6281xxxxxxxx?text=Halo%2C%20saya%20ingin%20bertanya%20tentang%20kost%20secara%20umum.', '_blank');
+};
+
+const handleScroll = () => {
+  showScrollToTop.value = window.scrollY > 300;
+};
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
+
+// Watcher untuk debugging nilai filter secara real-time (opsional, bisa dihapus)
+// watch([searchQuery, selectedLocation, selectedKostType], ([newQ, newLoc, newType]) => {
+//   console.log('Filter parameters changed:', {
+//     searchQuery: newQ,
+//     selectedLocation: newLoc,
+//     selectedKostType: newType
+//   });
+// });
+</script>
+
 <template>
   <Head title="Cari Kost Impianmu di Sini - KOST" />
 
@@ -5,14 +106,11 @@
     <header class="bg-green-600 py-3 md:py-4 shadow-md">
       <nav class="container mx-auto px-4 flex items-center justify-between">
         <Link href="/" class="flex items-center space-x-2">
-          <img src="/anime-frieren.gif" alt="Kost Logo" class="h-8 md:h-10" />
+          <img src="/public/logo.png" alt="Kost Logo" class="h-8 md:h-10" />
           <span class="text-xl md:text-2xl font-bold text-white hidden sm:block">KOST</span>
         </Link>
         <div class="flex items-center space-x-4 md:space-x-8 text-sm md:text-base">
-          <Link href="/panduan" class="text-white hover:text-green-200">Panduan</Link>
-          <Link href="/hubungi-kami" class="text-white hover:text-green-200">Hubungi Kami</Link>
-          <Link href="/cari-kost" class="text-white hover:text-green-200">Cari Kost</Link>
-          <Link href="/coba-gratis" class="bg-white text-green-600 px-3 py-1 md:px-4 md:py-2 rounded-full shadow hover:bg-gray-100 transition-colors">Coba Gratis</Link>
+          <Link href="/tentang-kami" class="text-white hover:text-green-200">Tentang Kami</Link>
           <Link href="/login" class="text-white hover:text-green-200">Masuk</Link>
         </div>
       </nav>
@@ -20,13 +118,13 @@
 
     <main class="flex-grow">
       <section class="relative bg-gradient-to-r from-green-700 to-green-500 text-white py-16 md:py-24">
-        <img src="/images/hero-bg.jpg" alt="Hero Background" class="absolute inset-0 w-full h-full object-cover opacity-30">
+        <img src="/public/background.png" alt="Hero Background" class="absolute inset-0 w-full h-full object-cover opacity-30">
         <div class="container mx-auto px-4 text-center relative z-10" data-aos="fade-up">
           <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-4">
-            Temukan Kost Idamanmu di Seluruh Indonesia!
+            Temukan Kost Idamanmu di Cilacap!
           </h1>
           <p class="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
-            Ratusan pilihan kost terverifikasi dengan fasilitas lengkap dan harga terbaik.
+            Ratusan pilihan kost terverifikasi di Cilacap dengan fasilitas lengkap dan harga terbaik.
           </p>
 
           <form @submit.prevent="performSearch" class="max-w-2xl mx-auto bg-white p-6 rounded-3xl shadow-xl space-y-4">
@@ -34,7 +132,7 @@
               <input
                 type="text"
                 v-model="searchQuery"
-                placeholder="Cari lokasi, kota, atau nama kost..."
+                placeholder="Cari nama kost atau jalan di Cilacap..."
                 class="w-full py-3 px-4 rounded-lg border border-gray-300 text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-400"
               />
             </div>
@@ -73,12 +171,12 @@
 
       <section class="container mx-auto px-4 py-12 md:py-16">
         <h2 class="text-3xl font-bold text-gray-800 text-center mb-8" data-aos="fade-up">
-          Kost Pilihan Terbaik
+          Kost Pilihan Terbaik di Cilacap
         </h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div v-for="kost in featuredKosts" :key="kost.id" class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300" data-aos="fade-up">
+          <div v-for="kost in filteredKosts" :key="kost.id" class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300" data-aos="fade-up">
             <Link :href="`/kost/${kost.slug || kost.id}`">
-              <img :src="kost.mainImage || '/images/default-kost-image.jpg'" :alt="kost.name" class="w-full h-48 object-cover">
+              <img :src="kost.mainImage || 'https://via.placeholder.com/600x400/CCCCCC/888888?text=No+Image'" :alt="kost.name" class="w-full h-48 object-cover">
               <div class="p-4">
                 <h3 class="text-xl font-semibold text-gray-800 truncate mb-1">{{ kost.name }}</h3>
                 <p class="text-gray-600 text-sm mb-2">{{ kost.address }}</p>
@@ -104,10 +202,13 @@
               </div>
             </Link>
           </div>
-          </div>
+        </div>
+        <div v-if="filteredKosts.length === 0" class="text-center text-gray-600 mt-8 text-lg">
+            Tidak ditemukan kost yang sesuai dengan kriteria pencarian Anda di Cilacap.
+        </div>
         <div class="text-center mt-10">
           <Link href="/cari-kost" class="inline-block bg-green-600 text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-green-700 transition-colors shadow-lg">
-            Lihat Semua Kost
+            Lihat Semua Kost di Cilacap
           </Link>
         </div>
       </section>
@@ -148,62 +249,27 @@
       <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 text-sm md:text-base">
         <div>
           <Link href="/" class="mb-4 inline-block">
-            <img src="/images/kost-logo.png" alt="Kost Logo" class="h-10" />
+            <img src="/public/logo.png" alt="Kost Logo" class="h-10" />
           </Link>
           <p class="font-bold text-lg mb-4">TETAP TERHUBUNG</p>
           <div class="flex space-x-4 mb-6">
             <a href="https://facebook.com/kostofficial" target="_blank" class="hover:text-white transition-colors">
               <i class="fab fa-facebook-f text-2xl"></i> <span class="ml-1">kostofficial</span>
             </a>
-            <a href="https://youtube.com/kost" target="_blank" class="hover:text-white transition-colors">
+            <a href="https://youtube.com/kostofficial" target="_blank" class="hover:text-white transition-colors">
               <i class="fab fa-youtube text-2xl"></i> <span class="ml-1">kost</span>
             </a>
-          </div>
-          <div class="mt-8">
-            <img src="/images/dun-and-bradstreet.png" alt="Dun & Bradstreet Registered" class="h-20" />
           </div>
         </div>
 
         <div>
           <h3 class="font-bold text-lg mb-4 text-white">TENTANG KOST</h3>
           <ul class="space-y-2">
-            <li><Link href="/cara-pesan" class="hover:text-white transition-colors">Cara Pesan</Link></li>
-            <li><Link href="/panduan-penggunaan" class="hover:text-white transition-colors">Panduan Penggunaan</Link></li>
-            <li><Link href="/fitur-kost" class="hover:text-white transition-colors">Fitur KOST</Link></li>
             <li><Link href="/hubungi-kami" class="hover:text-white transition-colors">Hubungi Kami</Link></li>
-            <li><Link href="/karir" class="hover:text-white transition-colors">Karir</Link></li>
-            <li><Link href="/franchise-bisnis-kost" class="hover:text-white transition-colors">Franchise Bisnis Kost</Link></li>
             <li><Link href="/tentang-kami" class="hover:text-white transition-colors">Tentang Kami</Link></li>
-            <li><Link href="/press-room" class="hover:text-white transition-colors">Press Room</Link></li>
           </ul>
         </div>
-
-        <div>
-          <h3 class="font-bold text-lg mb-4 text-white">PRODUK</h3>
-          <ul class="space-y-2">
-            <li><Link href="/sewa-kost" class="hover:text-white transition-colors">Sewa Kost</Link></li>
-            <li><Link href="/sewa-apartemen" class="hover:text-white transition-colors">Sewa Apartemen</Link></li>
-            <li><Link href="/booking-system" class="hover:text-white transition-colors">Booking System</Link></li>
-            <li><Link href="/accounting-system" class="hover:text-white transition-colors">Accounting System</Link></li>
-            <li><Link href="/payment-gateway" class="hover:text-white transition-colors">Payment Gateway</Link></li>
-            <li><Link href="/harga" class="hover:text-white transition-colors">Harga</Link></li>
-            <li><Link href="/jasa-autopilot-bisnis-kost" class="hover:text-white transition-colors">Jasa Autopilot Bisnis Kost</Link></li>
-          </ul>
         </div>
-
-        <div>
-          <h3 class="font-bold text-lg mb-4 text-white">LAINNYA</h3>
-          <ul class="space-y-2">
-            <li><Link href="/program-afiliasi" class="hover:text-white transition-colors">Program Afiliasi</Link></li>
-            <li><Link href="/blog" class="hover:text-white transition-colors">Blog</Link></li>
-            <li><Link href="/kebijakan-privasi" class="hover:text-white transition-colors">Kebijakan Privasi</Link></li>
-            <li><Link href="/syarat-dan-ketentuan" class="hover:text-white transition-colors">Syarat dan Ketentuan</Link></li>
-            <li><Link href="/partnership" class="hover:text-white transition-colors">Partnership</Link></li>
-            <li><Link href="/kostmart" class="hover:text-white transition-colors">KOSTMart</Link></li>
-            <li><Link href="/workshop-bisnis-kost" class="hover:text-white transition-colors">Workshop Bisnis Kost</Link></li>
-          </ul>
-        </div>
-      </div>
       <div class="bg-green-600 py-3 text-center mt-12 text-white text-sm md:text-base">
         <p>Copyright © 2025 kost.com - Satu Aplikasi untuk Semua Kebutuhan Kost</p>
       </div>
@@ -221,103 +287,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref, onMounted, onUnmounted, defineProps } from 'vue';
-import { Head, Link, router } from '@inertiajs/vue3';
-
-// If you are using AOS (Animate On Scroll) and it's installed, uncomment these:
-// import AOS from 'aos';
-// import 'aos/dist/aos.css';
-
-const props = defineProps({
-  featuredKosts: {
-    type: Array,
-    default: () => [
-      // Placeholder data for featured kosts if no data is passed from the backend
-      { id: 1, name: 'Kost Melati Indah', address: 'Jl. Contoh No. 10, Jakarta Pusat', type: 'Putri', isVerified: true, isRecommended: true, price: 1500000, remainingRooms: 3, mainImage: '/images/kost-example-1.jpg', slug: 'kost-melati-indah' },
-      { id: 2, name: 'Kost Putra Jaya', address: 'Jl. Probolinggo No. 5, Surabaya Barat', type: 'Putra', isVerified: true, isRecommended: false, price: 1200000, remainingRooms: 1, mainImage: '/images/kost-example-2.jpg', slug: 'kost-putra-jaya' },
-      { id: 3, name: 'Kost Campur Harmoni', address: 'Jl. Damai Sejahtera No. 20, Bandung Selatan', type: 'Campur', isVerified: false, isRecommended: true, price: 1800000, remainingRooms: 5, mainImage: '/images/kost-example-3.jpg', slug: 'kost-campur-harmoni' },
-      { id: 4, name: 'Kost Family Residence', address: 'Jl. Kebun Raya No. 12, Bogor Tengah', type: 'Campur', isVerified: true, isRecommended: true, price: 2000000, remainingRooms: 2, mainImage: '/images/kost-example-4.jpg', slug: 'kost-family-residence' },
-      { id: 5, name: 'Kost Mahasiswa Cerdas', address: 'Jl. Pendidikan No. 7, Yogyakarta Utara', type: 'Putra', isVerified: true, isRecommended: false, price: 900000, remainingRooms: 4, mainImage: '/images/kost-example-5.jpg', slug: 'kost-mahasiswa-cerdas' },
-      { id: 6, name: 'Kost Putri Bahagia', address: 'Jl. Bunga Melati No. 8, Malang Kota', type: 'Putri', isVerified: true, isRecommended: true, price: 1100000, remainingRooms: 0, mainImage: '/images/kost-example-6.jpg', slug: 'kost-putri-bahagia' },
-    ],
-  },
-});
-
-const searchQuery = ref('');
-const selectedLocation = ref('');
-const selectedKostType = ref('');
-
-// Updated list of locations, including 'Cilacap'
-const availableLocations = ref([
-  'Jakarta Pusat',
-  'Surabaya Barat',
-  'Bandung Selatan',
-  'Bogor Tengah',
-  'Yogyakarta Utara',
-  'Malang Kota',
-  'Cilacap', // Current location context added
-  // You would ideally fetch this from your backend
-]);
-
-const performSearch = () => {
-  const params = {};
-  if (searchQuery.value.trim()) {
-    params.q = searchQuery.value.trim();
-  }
-  if (selectedLocation.value) {
-    params.location = selectedLocation.value;
-  }
-  if (selectedKostType.value) {
-    params.type = selectedKostType.value;
-  }
-
-  const queryString = new URLSearchParams(params).toString();
-  router.visit(`/cari-kost${queryString ? '?' + queryString : ''}`);
-};
-
-const showScrollToTop = ref(false);
-
-const openWhatsApp = () => {
-  window.open('https://wa.me/6281xxxxxxxx?text=Halo%2C%20saya%20ingin%20bertanya%20tentang%20kost%20secara%20umum.', '_blank');
-};
-
-const handleScroll = () => {
-  showScrollToTop.value = window.scrollY > 300;
-};
-
-const scrollToTop = () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-};
-
-onMounted(() => {
-  if (typeof AOS !== 'undefined') {
-    AOS.init({
-      once: true,
-    });
-  } else {
-    console.warn('AOS not loaded. Ensure it is imported and initialized in your app.js.');
-  }
-  window.addEventListener('scroll', handleScroll);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
-});
-</script>
-
-<style>
-/* You might want to add some custom styles if Tailwind's appearance-none
-   isn't sufficient for customizing the select dropdown arrows.
-   For example:
-*/
-/*
-  select {
-    background-image: url('data:image/svg+xml;utf8,<svg fill="%234A5568" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 6.757 7.586 5.343 9z"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 0.7em top 50%;
-    background-size: 0.65em auto;
-  }
-*/
-</style>

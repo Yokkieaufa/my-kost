@@ -59,7 +59,7 @@ function goHome() {
   align-items: center;
   justify-content: center;
   font-family: 'Inter', sans-serif;
-  background: url('/anime-frieren.gif') center center no-repeat;
+  background: url('/public/anime.gif') center center no-repeat;
   background-size: cover;
 }
 .login-glass {
