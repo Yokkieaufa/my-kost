@@ -2,16 +2,13 @@
 import { ref, onMounted, onUnmounted, defineProps, computed, watch } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
 
-// Optional: Uncomment this if you are using AOS (Animate On Scroll)
-// import AOS from 'aos';
-// import 'aos/dist/aos.css';
+
 
 const props = defineProps({
   featuredKosts: {
     type: Array,
     default: () => [
-      // Data dummy untuk kost di Cilacap dengan URL gambar langsung
-      // **PERHATIAN: Mengubah 'Campuran' menjadi 'Campur' agar filter 'type' berfungsi dengan dropdown.**
+      
       { id: 1, name: 'KOST PUTRA CILACAP KOTA', address: 'Jalan Kalimas No.17, Cilacap Tengah', type: 'Campur', isVerified: true, isRecommended: true, price: 500000, remainingRooms: 2, mainImage: 'https://www.sewakost.com/files/01-2023/ad109903/kos-putra-cilacap-kota-1339313874_large.jpg', slug: 'Kost Putra Cilacap Kota' },
       { id: 2, name: 'KOST Pandawa', address: 'Jl. Sawo, Kandang Macan, Tegalreja, Kec. Cilacap Sel., Kabupaten Cilacap, Jawa Tengah, Cilacap, 53214 Cilacap, Indonesia', type: 'Campur', isVerified: true, isRecommended: false, price: 550000, remainingRooms: 4, mainImage: 'https://infocilacap.net/wp-content/uploads/2020/07/kost-pandawa.jpg', slug: 'kost pandawa' },
       { id: 3, name: 'KOST Zhafran Sindoro', address: 'Jl. Sindoro (belakang kabupaten) Cilacap', type: 'Campur', isVerified: true, isRecommended: true, price: 1300000, remainingRooms: 3, mainImage: 'https://infocilacap.net/hotel/wp-content/uploads/2019/12/zhafran-kost.jpg', slug: 'Kost Zhafran' },
@@ -23,14 +20,14 @@ const props = defineProps({
 });
 
 const searchQuery = ref('');
-const selectedLocation = ref('Cilacap'); // Default ke Cilacap
+const selectedLocation = ref('Cilacap');
 const selectedKostType = ref('');
 
 const availableLocations = ref([
   'Cilacap Tengah',
   'Cilacap Utara',
   'Cilacap Selatan',
-  // Tambahkan lokasi lain di Cilacap jika ada data kost untuk itu
+ 
 ]);
 
 const filteredKosts = computed(() => {
@@ -46,8 +43,7 @@ const filteredKosts = computed(() => {
 
   if (selectedLocation.value) {
     const locationLower = selectedLocation.value.toLowerCase();
-    // Mengubah cara memfilter lokasi agar lebih fleksibel
-    // Memeriksa apakah alamat kost mengandung string lokasi yang dipilih
+   
     filtered = filtered.filter(kost =>
       kost.address.toLowerCase().includes(locationLower)
     );
@@ -63,13 +59,13 @@ const filteredKosts = computed(() => {
 });
 
 const performSearch = () => {
-  // Computed property sudah reaktif, tidak perlu aksi tambahan di sini
+  
 };
 
 const showScrollToTop = ref(false);
 
 const openWhatsApp = () => {
-  // Perbarui nomor telepon jika diperlukan
+  
   window.open('https://wa.me/6281xxxxxxxx?text=Halo%2C%20saya%20ingin%20bertanya%20tentang%20kost%20secara%20umum.', '_blank');
 };
 
@@ -89,14 +85,7 @@ onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
 });
 
-// Watcher untuk debugging nilai filter secara real-time (opsional, bisa dihapus)
-// watch([searchQuery, selectedLocation, selectedKostType], ([newQ, newLoc, newType]) => {
-//   console.log('Filter parameters changed:', {
-//     searchQuery: newQ,
-//     selectedLocation: newLoc,
-//     selectedKostType: newType
-//   });
-// });
+
 </script>
 
 <template>

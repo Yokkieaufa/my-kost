@@ -5,7 +5,7 @@ import { Head, Link } from '@inertiajs/vue3';
 const showScrollToTop = ref(false);
 
 const openWhatsApp = () => {
-  // Perbarui nomor telepon jika diperlukan
+ 
   window.open('https://wa.me/6281xxxxxxxx?text=Halo%2C%20saya%20ingin%20bertanya%20tentang%20kost%20secara%20umum.', '_blank');
 };
 
