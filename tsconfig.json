@@ -2,7 +2,19 @@
   "extends": "@adonisjs/tsconfig/tsconfig.app.json",
   "compilerOptions": {
     "rootDir": "./",
-    "outDir": "./build"
+    "outDir": "./build",
+    "paths": {
+      // Pastikan alias ini ada.
+      // Ini adalah yang paling umum dan seharusnya cocok dengan '#validators/auth_validator'
+      "#validators/*": [
+        "./app/validators/*"
+      ],
+      // Pastikan juga alias untuk models sudah ada jika belum
+      "#models/*": [
+        "./app/models/*"
+      ],
+      // ... alias lain yang mungkin sudah ada
+    }
   },
   "exclude": ["./inertia/**/*", "node_modules", "build"]
 }

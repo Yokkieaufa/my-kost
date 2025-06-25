@@ -1,4 +1,4 @@
-import { createInertiaApp } from '@inertiajs/vue3'
+import { createInertiaApp, Link } from '@inertiajs/vue3'
 import { renderToString } from '@vue/server-renderer'
 import { createSSRApp, h, type DefineComponent } from 'vue'
 
@@ -12,7 +12,10 @@ export default function render(page: any) {
     },
 
     setup({ App, props, plugin }) {
-      return createSSRApp({ render: () => h(App, props) }).use(plugin)
+      return createSSRApp({ render: () => h(App, props) })
+        .use(plugin)
+        .use(plugin)
+        .component('Link', Link)
     },
   })
 }

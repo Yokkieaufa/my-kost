@@ -2,14 +2,11 @@
 import { ref, onMounted, onUnmounted, defineProps, computed, watch } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
 
-
-
 const props = defineProps({
   featuredKosts: {
     type: Array,
     default: () => [
-      
-      { id: 1, name: 'KOST PUTRA CILACAP KOTA', address: 'Jalan Kalimas No.17, Cilacap Tengah', type: 'Campur', isVerified: true, isRecommended: true, price: 500000, remainingRooms: 2, mainImage: 'https://www.sewakost.com/files/01-2023/ad109903/kos-putra-cilacap-kota-1339313874_large.jpg', slug: 'Kost Putra Cilacap Kota' },
+      { id: 1, name: 'KOST PUTRA CILACAP KOTA', address: 'Jalan Kalimas No.17, Cilacap Tengah', type: 'Putra', isVerified: true, isRecommended: true, price: 500000, remainingRooms: 2, mainImage: 'https://www.sewakost.com/files/01-2023/ad109903/kos-putra-cilacap-kota-1339313874_large.jpg', slug: 'Kost Putra Cilacap Kota' },
       { id: 2, name: 'KOST Pandawa', address: 'Jl. Sawo, Kandang Macan, Tegalreja, Kec. Cilacap Sel., Kabupaten Cilacap, Jawa Tengah, Cilacap, 53214 Cilacap, Indonesia', type: 'Campur', isVerified: true, isRecommended: false, price: 550000, remainingRooms: 4, mainImage: 'https://infocilacap.net/wp-content/uploads/2020/07/kost-pandawa.jpg', slug: 'kost pandawa' },
       { id: 3, name: 'KOST Zhafran Sindoro', address: 'Jl. Sindoro (belakang kabupaten) Cilacap', type: 'Campur', isVerified: true, isRecommended: true, price: 1300000, remainingRooms: 3, mainImage: 'https://infocilacap.net/hotel/wp-content/uploads/2019/12/zhafran-kost.jpg', slug: 'Kost Zhafran' },
       { id: 4, name: 'Kost putra 25 Cilacap Utara Cilacap', address: 'Jl. Abiyasa No.25 Cilacap', type: 'Putra', isVerified: false, isRecommended: true, price: 500000, remainingRooms: 5, mainImage: 'https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=-G0xtxB_av7cVKF_p9ixzQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=358.83594&pitch=0&thumbfov=100', slug: 'kost puta 25' },
@@ -20,14 +17,13 @@ const props = defineProps({
 });
 
 const searchQuery = ref('');
-const selectedLocation = ref('Cilacap');
+const selectedLocation = ref(''); 
 const selectedKostType = ref('');
 
 const availableLocations = ref([
   'Cilacap Tengah',
   'Cilacap Utara',
   'Cilacap Selatan',
- 
 ]);
 
 const filteredKosts = computed(() => {
@@ -41,9 +37,8 @@ const filteredKosts = computed(() => {
     );
   }
 
-  if (selectedLocation.value) {
+  if (selectedLocation.value) { // Only filter if a specific location is selected
     const locationLower = selectedLocation.value.toLowerCase();
-   
     filtered = filtered.filter(kost =>
       kost.address.toLowerCase().includes(locationLower)
     );
@@ -58,14 +53,11 @@ const filteredKosts = computed(() => {
   return filtered;
 });
 
-const performSearch = () => {
-  
-};
+const performSearch = () => { }; 
 
 const showScrollToTop = ref(false);
 
 const openWhatsApp = () => {
-  
   window.open('https://wa.me/6281xxxxxxxx?text=Halo%2C%20saya%20ingin%20bertanya%20tentang%20kost%20secara%20umum.', '_blank');
 };
 
@@ -84,8 +76,6 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
 });
-
-
 </script>
 
 <template>
@@ -130,8 +120,7 @@ onUnmounted(() => {
                 v-model="selectedLocation"
                 class="w-full py-3 px-4 rounded-lg border border-gray-300 text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-green-400 appearance-none pr-8"
               >
-                <option value="">Semua Lokasi</option>
-                <option v-for="location in availableLocations" :key="location" :value="location">
+                <option value="">Semua Lokasi</option> <option v-for="location in availableLocations" :key="location" :value="location">
                   {{ location }}
                 </option>
               </select>
@@ -147,14 +136,7 @@ onUnmounted(() => {
                 <option value="Campur">Campur</option>
               </select>
             </div>
-            <button
-              type="submit"
-              class="w-full bg-green-600 text-white py-3 rounded-full text-lg font-semibold hover:bg-green-700 transition-colors flex items-center justify-center space-x-2 shadow-md"
-            >
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-              <span>Cari Kost</span>
-            </button>
-          </form>
+            </form>
         </div>
       </section>
 
@@ -162,8 +144,8 @@ onUnmounted(() => {
         <h2 class="text-3xl font-bold text-gray-800 text-center mb-8" data-aos="fade-up">
           Kost Pilihan Terbaik di Cilacap
         </h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div v-for="kost in filteredKosts" :key="kost.id" class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300" data-aos="fade-up">
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-6">
+        <div v-for="kost in filteredKosts" :key="kost.id" class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300" data-aos="fade-up">
             <Link :href="`/kost/${kost.slug || kost.id}`">
               <img :src="kost.mainImage || 'https://via.placeholder.com/600x400/CCCCCC/888888?text=No+Image'" :alt="kost.name" class="w-full h-48 object-cover">
               <div class="p-4">
@@ -182,12 +164,15 @@ onUnmounted(() => {
                   </span>
                   <span v-if="kost.isVerified" class="px-2 py-0.5 rounded-full bg-green-200 text-green-800 text-xs">Verified</span>
                 </div>
-                <div class="flex justify-between items-center">
+                <div class="flex justify-between items-center mb-3">
                   <span class="text-green-600 font-bold text-lg">
                     Rp. {{ kost.price.toLocaleString('id-ID') }} / bulan
                   </span>
                   <span class="text-gray-500 text-sm">Sisa {{ kost.remainingRooms }} kamar</span>
                 </div>
+                <Link :href="`/pesan/${kost.id}`" class="block w-full bg-blue-500 text-white py-2 rounded-md text-center hover:bg-blue-600 transition-colors mt-2">
+                    Pesan Sekarang
+                </Link>
               </div>
             </Link>
           </div>
@@ -254,11 +239,11 @@ onUnmounted(() => {
         <div>
           <h3 class="font-bold text-lg mb-4 text-white">TENTANG KOST</h3>
           <ul class="space-y-2">
-            <li><Link href="/hubungi-kami" class="hover:text-white transition-colors">Hubungi Kami</Link></li>
+            <li class="hover:text-white transition-colors"><Link href="/hubungi-kami">Hubungi Kami</Link></li>
             <li><Link href="/tentang-kami" class="hover:text-white transition-colors">Tentang Kami</Link></li>
           </ul>
         </div>
-        </div>
+      </div>
       <div class="bg-green-600 py-3 text-center mt-12 text-white text-sm md:text-base">
         <p>Copyright © 2025 kost.com - Satu Aplikasi untuk Semua Kebutuhan Kost</p>
       </div>
