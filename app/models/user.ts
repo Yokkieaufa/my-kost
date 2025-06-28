@@ -1,9 +1,7 @@
-import { DateTime } from 'luxon'
+// app/Models/User.ts
 import { BaseModel, beforeSave, column } from '@adonisjs/lucid/orm'
-// HAPUS BARIS INI: import { Hash } from '@adonisjs/core/hash'
-
-// --- TAMBAHKAN BARIS INI UNTUK MENGIMPOR SERVICE HASH ---
-import hash from '@adonisjs/core/services/hash'
+import { DateTime } from 'luxon'
+import Hash from '@adonisjs/core/services/hash'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -12,16 +10,11 @@ export default class User extends BaseModel {
   @column()
   declare fullName: string
 
-  @column({
-    serializeAs: null,
-  })
-  declare password: string
-
   @column()
   declare email: string
 
-  @column()
-  declare rememberMeToken: string | null
+  @column({ serializeAs: null })
+  declare password: string
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -31,9 +24,9 @@ export default class User extends BaseModel {
 
   @beforeSave()
   static async hashPassword(user: User) {
+    // Hanya hash jika password diubah
     if (user.$dirty.password) {
-      // --- UBAH BARIS INI DARI Hash.make() MENJADI hash.make() ---
-      user.password = await hash.make(user.password)
+      user.password = await Hash.make(user.password)
     }
   }
 }

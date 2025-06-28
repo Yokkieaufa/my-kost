@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { Head, Link, useForm } from '@inertiajs/vue3'
-import { router } from '@inertiajs/vue3'
+import { Head, Link, useForm, router } from '@inertiajs/vue3'
 
 const loginForm = useForm({
   email: '',
@@ -17,7 +16,14 @@ function goHome() {
     <Head title="Login" />
     <div class="login-glass">
       <h2 class="login-title">Login</h2>
-      <form @submit.prevent="loginForm.post('/login')" class="login-form">
+
+      <!-- Form Login -->
+      <form
+        @submit.prevent="loginForm.post('/login', {
+          onSuccess: () => router.visit('/dashboard'),
+        })"
+        class="login-form"
+      >
         <input
           type="email"
           name="email"
@@ -32,6 +38,12 @@ function goHome() {
           placeholder="Enter your password"
           required
         >
+
+        <!-- Menampilkan error dari backend -->
+        <p v-if="$page.props.flash?.errors?.email" class="text-red-600 text-sm mt-2">
+          {{ $page.props.flash.errors.email }}
+        </p>
+
         <button
           type="submit"
           :disabled="loginForm.processing"
@@ -40,10 +52,14 @@ function goHome() {
           {{ loginForm.processing ? 'Loading...' : 'Log In' }}
         </button>
       </form>
+
+      <!-- Link ke Register -->
       <div class="register-link">
         Don't have an account?
         <Link href="/register">Register</Link>
       </div>
+
+      <!-- Tombol Home -->
       <button class="home-btn" @click="goHome">Back to Home</button>
     </div>
   </div>

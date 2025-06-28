@@ -33,7 +33,7 @@ onUnmounted(() => {
     <header class="bg-green-600 py-3 md:py-4 shadow-md">
       <nav class="container mx-auto px-4 flex items-center justify-between">
         <Link href="/" class="flex items-center space-x-2">
-          <img src="/public/logo.png" alt="Kost Logo" class="h-8 md:h-10" />
+          <img src="/public/logo2.jpg" alt="Kost Logo" class="h-8 md:h-10" />
           <span class="text-xl md:text-2xl font-bold text-white hidden sm:block">KOST</span>
         </Link>
         <div class="flex items-center space-x-4 md:space-x-8 text-sm md:text-base">
@@ -88,7 +88,7 @@ onUnmounted(() => {
       <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 text-sm md:text-base">
         <div>
           <Link href="/" class="mb-4 inline-block">
-            <img src="/public/logo.png" alt="Kost Logo" class="h-10" />
+            <img src="/public/logo2.jpg" alt="Kost Logo" class="h-10" />
           </Link>
           <p class="font-bold text-lg mb-4">TETAP TERHUBUNG</p>
           <div class="flex space-x-4 mb-6">

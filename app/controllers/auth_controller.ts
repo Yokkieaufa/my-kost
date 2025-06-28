@@ -1,20 +1,41 @@
-import { HttpContext } from '@adonisjs/core/http'
-import { loginValidator } from '#validators/auth'
+import User from '#models/user'
+import Hash from '@adonisjs/core/services/hash'
+import type { HttpContext } from '@adonisjs/core/http'
 
 export default class AuthController {
-  async login({ request, auth, response, session }: HttpContext) {
-    const { email, password, rememberMe } = await request.validateUsing(loginValidator)
+  async register({ request, response, auth, session }: HttpContext) {
+    const { fullName, email, password } = request.only(['fullName', 'email', 'password'])
 
-    try {
-      // @ts-expect-error: method attempt tidak dikenali TypeScript padahal tersedia di runtime
-      await auth.use('web').attempt(email, password, rememberMe)
-      session.flash('success', 'Berhasil login!')
-      return response.redirect().toPath('/')
-    } catch {
-      session.flash('errors', { message: 'Email atau password salah.' })
+    // ✅ Cek apakah email sudah terdaftar
+    const existingUser = await User.findBy('email', email)
+    if (existingUser) {
+      session.flash('errors', {
+        email: 'Email sudah digunakan. Silakan gunakan email lain.',
+      })
       return response.redirect().back()
     }
+
+    // ✅ Buat user baru
+    const user = await User.create({ fullName, email, password })
+    await auth.use('web').login(user)
+    return response.redirect('/')
   }
 
-  // ...fungsi lain
+  async login({ request, response, auth, session }: HttpContext) {
+    const { email, password } = request.only(['email', 'password'])
+
+    const user = await User.findBy('email', email)
+    if (!user || !(await Hash.verify(user.password, password))) {
+      session.flash('errors', { email: 'Email atau password salah' })
+      return response.redirect().back()
+    }
+
+    await auth.use('web').login(user)
+    return response.redirect('/')
+  }
+
+  async logout({ auth, response }: HttpContext) {
+    await auth.use('web').logout()
+    return response.redirect('/')
+  }
 }

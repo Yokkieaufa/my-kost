@@ -4,16 +4,9 @@
     "rootDir": "./",
     "outDir": "./build",
     "paths": {
-      // Pastikan alias ini ada.
-      // Ini adalah yang paling umum dan seharusnya cocok dengan '#validators/auth_validator'
-      "#validators/*": [
-        "./app/validators/*"
-      ],
-      // Pastikan juga alias untuk models sudah ada jika belum
-      "#models/*": [
-        "./app/models/*"
-      ],
-      // ... alias lain yang mungkin sudah ada
+      "#validators/*": ["./app/validators/*"],
+      "#models/*": ["./app/models/*"],
+      "#controllers/*": ["./app/controllers/*"]
     }
   },
   "exclude": ["./inertia/**/*", "node_modules", "build"]
